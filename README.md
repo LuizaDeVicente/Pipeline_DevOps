@@ -13,7 +13,6 @@ Abra `index.html` no navegador. Mantenha `style.css` e `script.js` na mesma past
 - `script.js`: simulação, quiz, checklist e download das anotações.
 - `README.md`: instruções do projeto.
 
-Não envie a pasta `tmp`: ela contém apenas material temporário de leitura do enunciado. Não coloque anotações pessoais ou capturas do relatório na pasta que será publicada.
 
 ## O que experimentar
 
