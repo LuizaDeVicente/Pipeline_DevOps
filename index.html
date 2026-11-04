@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Um laboratório interativo para entender CI/CD, explorar uma pipeline e organizar a entrega de DevOps.">
+  <title>Do código à publicação · Guia CI/CD</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+  <header class="topbar">
+    <a class="brand" href="#inicio">Percurso<span> / CI/CD</span></a>
+    <a href="#simulador" class="header-link">Experimentar o fluxo <span aria-hidden="true">↗</span></a>
+  </header>
+  <div class="layout">
+    <aside class="sidebar" aria-label="Navegação do guia">
+      <p class="sidebar-title">Seu roteiro de estudo</p>
+      <nav>
+        <a href="#inicio">Comece por aqui</a>
+        <a href="#conceitos">Entenda os conceitos</a>
+        <a href="#simulador">Simule uma execução</a>
+        <a href="#construcao">Construa sua pipeline</a>
+        <a href="#quiz">Teste seu entendimento</a>
+        <a href="#entrega">Organize a entrega</a>
+      </nav>
+      <p class="sidebar-note">Leia, experimente e depois implemente no seu repositório.</p>
+      <p class="local-label">HTML + CSS + JavaScript<br>Sem bibliotecas externas.</p>
+    </aside>
+    <main id="conteudo">
+      <section id="inicio" class="hero" aria-labelledby="titulo">
+        <h1 id="titulo">Do código<br>à <em>publicação.</em></h1>
+        <p class="lead">Uma mudança no código. Uma sequência de verificações. Uma nova versão no ar. Entenda o caminho que conecta tudo isso.</p>
+        <a class="button" href="#simulador">Explorar a pipeline <span aria-hidden="true">→</span></a>
+        <div class="hero-flow" aria-label="Fluxo geral: código, verificação e publicação">
+          <span>Código</span><span aria-hidden="true">→</span><span>Verificação <b>CI</b></span><span aria-hidden="true">→</span><span>Publicação <b>CD</b></span>
+        </div>
+        <p class="caption">Guia de estudo do laboratório de DevOps. As execuções desta página são simulações.</p>
+      </section>
+
+      <section id="conceitos" aria-labelledby="titulo-conceitos">
+        <h2 id="titulo-conceitos">Primeiro, entenda o caminho.</h2>
+        <p>Uma <strong>pipeline</strong> é um fluxo automatizado de tarefas. Ela transforma uma alteração de código em algo verificado e, quando as condições permitem, publicado. Pense em uma linha de produção com pontos de inspeção.</p>
+        <div class="concepts">
+          <article><h3>CI: verificar a mudança</h3><p>A integração contínua usa verificações frequentes para detectar problemas nas alterações. Pode conferir sintaxe, executar testes e validar arquivos necessários. Uma falha deve impedir a publicação daquela execução.</p></article>
+          <article><h3>CD: entregar uma versão</h3><p>Neste laboratório, a implantação contínua publica automaticamente após um push na <code>main</code>, se a CI passar. Em outros contextos, CD também significa entrega contínua, que pode incluir uma aprovação manual.</p></article>
+        </div>
+        <details><summary>Como o GitHub Actions organiza esse trabalho?</summary><dl>
+          <dt>Workflow</dt><dd>Arquivo YAML em <code>.github/workflows/</code> que define eventos, tarefas e condições.</dd>
+          <dt>Evento</dt><dd>O que dispara o fluxo, como um push ou um pull request direcionado à main.</dd>
+          <dt>Job</dt><dd>Um conjunto de etapas. Jobs podem executar em paralelo ou depender de outros jobs.</dd>
+          <dt>Step</dt><dd>Uma etapa de um job: executar um comando ou utilizar uma action reutilizável.</dd>
+          <dt>Runner</dt><dd>A máquina que executa o job. Não é necessário deixar seu computador ligado ao usar um runner hospedado pelo GitHub.</dd>
+          <dt>Checkout</dt><dd>Obtém o código do repositório para que o runner possa trabalhar com ele.</dd>
+          <dt>Artefato</dt><dd>Arquivos produzidos ou preparados por um job que podem ser armazenados e usados em outra etapa.</dd>
+        </dl></details>
+        <details><summary>Qual é a diferença entre commit, push e pull request?</summary><p><strong>Commit</strong> registra uma versão no histórico local. <strong>Push</strong> envia commits para o repositório remoto. <strong>Pull request</strong> propõe integrar alterações de uma branch em outra. Aqui, a CI deve verificar os pull requests que têm a main como destino e os pushes na main.</p></details>
+      </section>
+
+      <section id="simulador" class="simulation" aria-labelledby="titulo-simulador">
+        <div class="section-heading"><h2 id="titulo-simulador">E se você mudasse o código?</h2><span class="tag">Simulação educativa</span></div>
+        <p>Escolha um evento e observe quais etapas podem avançar. Nenhum comando será executado no GitHub.</p>
+        <div class="controls">
+          <label for="evento">O que aconteceu?<select id="evento"><option value="push">Push na main</option><option value="pr">Pull request para main</option></select></label>
+          <label class="check-label"><input type="checkbox" id="falha"> Introduzir uma falha na validação</label>
+          <button id="executar" type="button">Simular execução <span aria-hidden="true">→</span></button>
+        </div>
+        <ol id="etapas" class="pipeline" aria-label="Etapas da pipeline">
+          <li data-stage="checkout"><span class="stage-number">1</span><strong>Checkout</strong><span class="stage-status">Aguardando</span></li>
+          <li data-stage="ambiente"><span class="stage-number">2</span><strong>Ambiente</strong><span class="stage-status">Aguardando</span></li>
+          <li data-stage="validacao"><span class="stage-number">3</span><strong>Validação</strong><span class="stage-status">Aguardando</span></li>
+          <li data-stage="deploy"><span class="stage-number">4</span><strong>Deployment</strong><span class="stage-status">Aguardando</span></li>
+        </ol>
+        <p id="resultado" class="result" role="status" aria-live="polite">Tudo pronto. Escolha um cenário para começar.</p>
+        <pre id="log" class="log" aria-label="Registro da simulação">O registro das etapas aparecerá aqui.</pre>
+        <p class="caption">A simulação agrupa as verificações em um fluxo simplificado. Ela não comprova que sua pipeline real funciona.</p>
+      </section>
+
+      <section id="construcao" aria-labelledby="titulo-construcao">
+        <h2 id="titulo-construcao">Agora, construa de verdade.</h2>
+        <p>Use o roteiro abaixo para implementar a automação manualmente. Este guia é a aplicação de estudo; o arquivo da pipeline será criado por você.</p>
+        <p class="notice"><strong>Antes de escolher o projeto:</strong> o enunciado pede um projeto autoral já desenvolvido e armazenado no GitHub. Confirme o enquadramento deste guia antes de adotá-lo como projeto da entrega.</p>
+        <ol class="roadmap">
+          <li><h3>Entenda e versione a aplicação</h3><p>Abra esta página no navegador, explore os controles e revise o código. HTML organiza o conteúdo, CSS cuida da apresentação e JavaScript implementa as interações. Registre suas alterações no Git.</p></li>
+          <li><h3>Defina uma verificação útil</h3><p>Escolha o que a CI verificará: por exemplo, sintaxe do JavaScript e existência dos arquivos referenciados. Uma checagem de sintaxe não verifica o comportamento da interface; teste as interações também.</p></li>
+          <li><h3>Configure eventos e ambiente</h3><p>Crie seu YAML em <code>.github/workflows/</code>. Configure CI em push na main e pull request para main. Faça checkout e prepare as ferramentas usadas na verificação. Instale dependências apenas quando necessário.</p></li>
+          <li><h3>Conecte CI e CD</h3><p>Faça o job de publicação depender do sucesso da CI. Restrinja o CD a push na main. Só adicionar uma dependência entre jobs não impede a publicação em pull requests: o evento também precisa ser considerado.</p></li>
+          <li><h3>Escolha o destino da publicação</h3><p>GitHub Pages atende a este site estático, que não possui backend. Configure a publicação por GitHub Actions e as permissões e o ambiente exigidos pelo serviço. Publique os arquivos do site, sem incluir rascunhos do relatório.</p></li>
+          <li><h3>Teste os caminhos e reúna evidências</h3><p>Confira CI em pull request sem CD; push com CI e CD bem-sucedidos; e falha de validação bloqueando a publicação. Corrija a falha e confira a nova versão acessível. Registre links das execuções, commits, capturas e resultados reais.</p></li>
+        </ol>
+      </section>
+
+      <section id="quiz" aria-labelledby="titulo-quiz">
+        <h2 id="titulo-quiz">Antes de seguir, uma pergunta.</h2>
+        <form id="quiz-form">
+          <fieldset><legend>Um pull request para a main passou na CI. O que deve acontecer neste laboratório?</legend>
+            <label class="answer"><input type="radio" name="resposta" value="publicar" required> Publicar automaticamente, porque a CI passou.</label>
+            <label class="answer"><input type="radio" name="resposta" value="aguardar"> Manter o resultado da CI, sem executar o CD nesse evento.</label>
+            <label class="answer"><input type="radio" name="resposta" value="ignorar"> Ignorar a CI, porque só precisamos verificar pushes.</label>
+          </fieldset>
+          <button type="submit" class="secondary">Conferir resposta</button>
+          <p id="quiz-feedback" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section id="entrega" aria-labelledby="titulo-entrega">
+        <h2 id="titulo-entrega">Seu processo também conta.</h2>
+        <p>O laboratório pede um único PDF com projeto, pipeline, prompts, alterações, análise e evidências. Registre cada interação relevante enquanto trabalha.</p>
+        <div class="delivery-layout">
+          <div><h3>Confira o que falta</h3><p id="progresso" class="progress-label" aria-live="polite">0 de 7 itens conferidos</p><progress id="barra-progresso" max="7" value="0">0 de 7</progress>
+            <div id="checklist" class="checklist">
+              <label><input type="checkbox" data-item="repositorio"> Link do repositório e descrição do projeto</label>
+              <label><input type="checkbox" data-item="workflow"> Arquivo YAML final da pipeline</label>
+              <label><input type="checkbox" data-item="prompts"> Prompts e resultados das interações</label>
+              <label><input type="checkbox" data-item="alteracoes"> Alterações, problemas e correções manuais</label>
+              <label><input type="checkbox" data-item="justificativa"> Justificativa da estratégia de deployment</label>
+              <label><input type="checkbox" data-item="evidencias"> Evidências reais de CI, CD e aplicação publicada</label>
+              <label><input type="checkbox" data-item="analise"> Análise final e quantidade de prompts</label>
+            </div>
+          </div>
+          <div><h3>Registre uma interação</h3><label for="anotacoes">Preencha este roteiro e baixe suas anotações.</label>
+            <textarea id="anotacoes" rows="13" spellcheck="true">## Registro de interação
+Data:
+Prompt utilizado (texto original):
+Objetivo:
+Resultado obtido:
+Problema encontrado (se houver):
+Alteração realizada:
+O que fiz manualmente:
+Como verifiquei o resultado:
+Evidências (links ou identificação das capturas):
+Próximo passo:</textarea>
+            <button id="baixar" type="button" class="secondary">Baixar anotações (.md)</button>
+          </div>
+        </div>
+        <p id="storage-status" class="caption" role="status">O checklist e as anotações são salvos neste navegador, quando disponível. Baixe uma cópia antes de sair.</p>
+        <p class="caption">Marcar um item é uma organização pessoal, não uma validação automática. O arquivo de anotações não substitui o PDF final.</p>
+      </section>
+      <footer>
+        <p>Aprenda o fluxo. Entenda cada decisão. Registre o que realmente aconteceu.</p>
+        <p>Fontes: enunciado “Lab CICD-Pipeline” e documentação oficial do GitHub.</p>
+        <a href="https://docs.github.com/en/actions/get-started/understand-github-actions">Conceitos do GitHub Actions ↗</a>
+        <a href="https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages">Publicação no GitHub Pages ↗</a>
+      </footer>
+    </main>
+  </div>
+  <noscript><p class="notice">Ative o JavaScript para usar o simulador, conferir o quiz e salvar as anotações. O conteúdo de estudo continua disponível.</p></noscript>
+</body>
+</html>
