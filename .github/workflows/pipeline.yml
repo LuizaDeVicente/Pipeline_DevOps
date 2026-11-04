@@ -1,1 +1,34 @@
+name: CI/CD do guia interativo
 
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    name: Verificar o projeto
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Obter o código do repositório
+        uses: actions/checkout@v6
+
+      - name: Preparar o Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+
+      - name: Conferir os arquivos necessários
+        run: |
+          test -s index.html
+          test -s style.css
+          test -s script.js
+          echo "Os três arquivos existem e possuem conteúdo."
+
+      - name: Verificar a sintaxe do JavaScript
+        run: node --check script.js
