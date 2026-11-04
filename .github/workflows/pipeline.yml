@@ -32,3 +32,43 @@ jobs:
 
       - name: Verificar a sintaxe do JavaScript
         run: node --check script.js
+  
+  deploy:
+    name: Publicar no GitHub Pages
+    needs: ci
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    concurrency:
+      group: github-pages
+      cancel-in-progress: false
+
+    environment:
+      name: github-pages
+      url: ${{ steps.publicacao.outputs.page_url }}
+
+    steps:
+      - name: Obter o código aprovado
+        uses: actions/checkout@v6
+
+      - name: Preparar os arquivos do site
+        run: |
+          mkdir -p _site
+          cp index.html style.css script.js _site/
+
+      - name: Configurar o GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Enviar os arquivos para publicação
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+      - name: Publicar o site
+        id: publicacao
+        uses: actions/deploy-pages@v4
