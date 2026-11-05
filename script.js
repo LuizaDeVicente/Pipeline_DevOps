@@ -121,4 +121,3 @@ document.querySelector("#baixar").addEventListener("click", () => {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 });
 
-const erroDeTeste = ;
